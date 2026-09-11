@@ -1,0 +1,22 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://www.ehcache.org/ehcache.xsd"
+         updateCheck="false">
+
+    <diskStore path="java.io.tmpdir"/>
+
+    <defaultCache
+            maxEntriesLocalHeap="1000"
+            eternal="false"
+            timeToLiveSeconds="600"
+            timeToIdleSeconds="300"
+            overflowToDisk="false"
+            statistics="true" />
+
+    <cache name="loans"
+           maxEntriesLocalHeap="500"
+           eternal="false"
+           timeToLiveSeconds="300"
+           timeToIdleSeconds="150"
+           overflowToDisk="false"
+           statistics="true"/>
+</ehcache>

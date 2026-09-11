@@ -1,0 +1,15 @@
+<main class="shell">
+  <section class="brand"><span class="mark">M</span><span>Loan desk</span></section>
+  @if (!auth.token()) {
+    <section class="panel login-panel"><p class="eyebrow">ACCESS PORTAL</p><h1>Gestiona tu<br><em>préstamo.</em></h1><p class="muted">Solicita financiación y sigue cada decisión desde un solo lugar.</p>
+      <form [formGroup]="loginForm" (ngSubmit)="login()"><label>Usuario <input formControlName="username" placeholder="user o admin" /></label><label>Contraseña <input type="password" formControlName="password" placeholder="Contraseña" /></label>@if (error) { <p class="error">{{ error }}</p> }<button [disabled]="loginForm.invalid || busy">{{ busy ? 'Ingresando...' : 'Ingresar' }}</button></form><p class="hint">Demo: user / user123 · admin / admin123</p>
+    </section>
+  } @else {
+    <header class="topbar"><div><p class="eyebrow">LOAN DESK</p><h2>{{ auth.isAdmin() ? 'Bandeja de solicitudes' : 'Tu espacio financiero' }}</h2></div><button class="secondary" (click)="logout()">Cerrar sesión</button></header>
+    @if (auth.isAdmin()) {
+      <section class="panel wide"><p class="eyebrow">ADMINISTRACIÓN</p><h1>Solicitudes pendientes</h1>@for (loan of loans; track loan.id) {<article class="loan"><div><strong>${{ loan.amount | number }}</strong><span>{{ loan.termMonths }} meses · {{ loan.status }}</span></div>@if (loan.status === 'PENDING') {<div class="actions"><button (click)="change(loan.id, true)">Aprobar</button><button class="danger" (click)="change(loan.id, false)">Rechazar</button></div>}</article>} @empty {<p class="muted">No hay solicitudes registradas.</p>}</section>
+    } @else {
+      <div class="grid"><section class="panel"><p class="eyebrow">NUEVA SOLICITUD</p><h1>Cuéntanos cuánto necesitas.</h1><form [formGroup]="loanForm" (ngSubmit)="requestLoan()"><label>Monto <input type="number" formControlName="amount" placeholder="10000" /></label><label>Plazo (meses) <input type="number" formControlName="termMonths" placeholder="12" /></label><button [disabled]="loanForm.invalid || busy">Solicitar préstamo</button></form>@if (message) {<p class="success">{{ message }}</p>}</section><section class="panel"><p class="eyebrow">HISTORIAL</p><h1>Mis préstamos</h1>@for (loan of loans; track loan.id) {<article class="loan"><div><strong>${{ loan.amount | number }}</strong><span>{{ loan.termMonths }} meses · {{ loan.status }}</span></div><span class="status" [class.approved]="loan.status === 'APPROVED'">{{ loan.status }}</span></article>} @empty {<p class="muted">Aún no tienes solicitudes.</p>}</section></div>
+    }
+  }
+</main>
